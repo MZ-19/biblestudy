@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bible Study Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#e8e0f0; --base:#e8e0f0; --light-sh:#ffffff; --dark-sh:#c5bad4;
+    --accent:#7c5cbf; --accent2:#a98be8; --text:#4a3f6b; --sub:#8a7aaa;
+    --today-bg:linear-gradient(135deg,#7c5cbf,#a98be8);
+    --radius:20px; --radius-sm:14px;
+  }
+  [data-theme="blue"]  { --bg:#dce8f5;--base:#dce8f5;--light-sh:#f5fbff;--dark-sh:#b0c8e0;--accent:#2563a8;--accent2:#5592d4;--text:#1a3a5c;--sub:#6a92b8;--today-bg:linear-gradient(135deg,#2563a8,#5592d4); }
+  [data-theme="sage"]  { --bg:#ddeee6;--base:#ddeee6;--light-sh:#f0fff8;--dark-sh:#b0cebc;--accent:#2e7d54;--accent2:#5daa7e;--text:#1a3d2b;--sub:#5a8870;--today-bg:linear-gradient(135deg,#2e7d54,#5daa7e); }
+  [data-theme="rose"]  { --bg:#f5e0e8;--base:#f5e0e8;--light-sh:#fff0f5;--dark-sh:#d4b0bc;--accent:#b5395e;--accent2:#e0708e;--text:#5c1a2e;--sub:#a06070;--today-bg:linear-gradient(135deg,#b5395e,#e0708e); }
+  [data-theme="dark"]  { --bg:#1e1e2e;--base:#1e1e2e;--light-sh:#2e2e42;--dark-sh:#101018;--accent:#b48ef4;--accent2:#d4baff;--text:#e0d8f8;--sub:#8878b8;--today-bg:linear-gradient(135deg,#7c5cbf,#b48ef4); }
+  [data-theme="warm"]  { --bg:#f0e8d8;--base:#f0e8d8;--light-sh:#fff8ec;--dark-sh:#d0c4a8;--accent:#a0622a;--accent2:#d4965a;--text:#4a2a0a;--sub:#9a7a58;--today-bg:linear-gradient(135deg,#a0622a,#d4965a); }
+
+  *,*::before,*::after { -webkit-box-sizing:border-box; box-sizing:border-box; margin:0; padding:0; }
+
+  body {
+    font-family:'Nunito',sans-serif,system-ui,-apple-system;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    -webkit-transition:background 0.4s,color 0.4s;
+    transition:background 0.4s,color 0.4s;
+    -webkit-tap-highlight-color:transparent;
+    -webkit-text-size-adjust:100%;
+  }
+
+  /* NEO */
+  .neo {
+    background:var(--base);
+    border-radius:var(--radius);
+    -webkit-box-shadow:6px 6px 14px var(--dark-sh),-6px -6px 14px var(--light-sh);
+    box-shadow:6px 6px 14px var(--dark-sh),-6px -6px 14px var(--light-sh);
+    -webkit-transition:box-shadow 0.3s,background 0.4s;
+    transition:box-shadow 0.3s,background 0.4s;
+  }
+  .neo-sm {
+    background:var(--base);
+    border-radius:var(--radius-sm);
+    -webkit-box-shadow:4px 4px 10px var(--dark-sh),-4px -4px 10px var(--light-sh);
+    box-shadow:4px 4px 10px var(--dark-sh),-4px -4px 10px var(--light-sh);
+    -webkit-transition:box-shadow 0.3s,background 0.4s;
+    transition:box-shadow 0.3s,background 0.4s;
+  }
+  .neo-btn:active {
+    -webkit-box-shadow:inset 3px 3px 8px var(--dark-sh),inset -3px -3px 8px var(--light-sh)!important;
+    box-shadow:inset 3px 3px 8px var(--dark-sh),inset -3px -3px 8px var(--light-sh)!important;
+    -webkit-transform:scale(0.97);
+    transform:scale(0.97);
+  }
+
+  /* PAGE WRAPPER */
+  .page {
+    max-width:420px;
+    margin:0 auto;
+    padding:0 18px 48px;
+  }
+
+  /* CLOCK */
+  .clock-card { padding:22px 20px 18px; text-align:center; }
+  .time-display {
+    font-size:3.4rem;
+    font-weight:800;
+    letter-spacing:-0.02em;
+    color:var(--text);
+    line-height:1;
+  }
+  .ampm { font-size:1.1rem; font-weight:600; color:var(--sub); margin-left:4px; vertical-align:super; }
+  .date-row { margin-top:8px; display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-pack:center; -ms-flex-pack:center; justify-content:center; -ms-flex-wrap:wrap; flex-wrap:wrap; }
+  .date-chip { font-size:0.72rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--sub); background:var(--base); border-radius:50px; padding:4px 12px; margin:4px 5px 0; -webkit-box-shadow:2px 2px 6px var(--dark-sh),-2px -2px 6px var(--light-sh); box-shadow:2px 2px 6px var(--dark-sh),-2px -2px 6px var(--light-sh); }
+  .date-chip.accent-chip { color:var(--accent); font-weight:800; }
+
+  /* CARD LABEL */
+  .card-label { font-size:0.68rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--sub); padding-left:4px; margin-bottom:10px; display:block; }
+
+  /* WRITER CARDS */
+  .writer-card {
+    background:var(--today-bg);
+    border-radius:var(--radius);
+    padding:22px 22px 20px;
+    -webkit-box-shadow:6px 6px 16px var(--dark-sh),-2px -2px 10px var(--light-sh);
+    box-shadow:6px 6px 16px var(--dark-sh),-2px -2px 10px var(--light-sh);
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+    align-items:center;
+    cursor:pointer;
+    text-decoration:none;
+    -webkit-transition:-webkit-transform 0.2s,box-shadow 0.2s;
+    transition:transform 0.2s,box-shadow 0.2s;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    width:100%;
+  }
+
+.writer-card.secondary {
+  background: var(--base);
+  color: var(--text);
+  box-shadow:6px 6px 16px var(--dark-sh),-6px -6px 16px var(--light-sh);
+}
+.writer-card.secondary .writer-avatar{
+  background:var(--base);
+  box-shadow:3px 3px 8px var(--dark-sh),-3px -3px 8px var(--light-sh);
+}
+.writer-card.secondary .writer-tag{color:var(--sub);}
+.writer-card.secondary .writer-name{color:var(--text);}
+.writer-card.secondary .writer-handle{color:var(--sub);}
+.writer-card.secondary .writer-arrow{color:var(--accent);}
+
+  .writer-card:active { -webkit-transform:scale(0.97); transform:scale(0.97); -webkit-box-shadow:3px 3px 10px var(--dark-sh); box-shadow:3px 3px 10px var(--dark-sh); }
+  .writer-avatar { width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,0.22); display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-align:center; -ms-flex-align:center; align-items:center; -webkit-box-pack:center; -ms-flex-pack:center; justify-content:center; font-size:1.6rem; -ms-flex-negative:0; flex-shrink:0; -webkit-box-shadow:0 0 0 3px rgba(255,255,255,0.35); box-shadow:0 0 0 3px rgba(255,255,255,0.35); margin-right:16px; }
+  .writer-info { -webkit-box-flex:1; -ms-flex:1; flex:1; min-width:0; }
+  .writer-tag { font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.7); }
+  .writer-name { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:600; color:#fff; margin-top:1px; }
+  .writer-handle { font-size:0.73rem; color:rgba(255,255,255,0.75); margin-top:2px; }
+  .writer-arrow { font-size:1.3rem; color:rgba(255,255,255,0.8); -ms-flex-negative:0; flex-shrink:0; margin-left:12px; }
+
+  /* SECTION TITLE */
+  .section-title { font-size:0.68rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--sub); padding-left:4px; margin-bottom:12px; display:block; }
+
+  /* MEMBER GRID */
+  .members-grid { display:-ms-grid; display:grid; -ms-grid-columns:1fr 14px 1fr; grid-template-columns:1fr 1fr; grid-gap:14px; }
+  .member-btn { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-orient:vertical; -webkit-box-direction:normal; -ms-flex-direction:column; flex-direction:column; -webkit-box-align:center; -ms-flex-align:center; align-items:center; padding:18px 12px 14px; cursor:pointer; text-decoration:none; border:none; outline:none; -webkit-transition:-webkit-transform 0.2s; transition:transform 0.2s; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none; width:100%; }
+  .member-btn:active { -webkit-transform:scale(0.96); transform:scale(0.96); }
+  .member-emoji { font-size:1.8rem; line-height:1; margin-bottom:8px; display:block; }
+  .member-name { font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:6px; }
+  .member-day { font-size:0.65rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent); background:var(--base); border-radius:50px; padding:2px 10px; -webkit-box-shadow:2px 2px 5px var(--dark-sh),-2px -2px 5px var(--light-sh); box-shadow:2px 2px 5px var(--dark-sh),-2px -2px 5px var(--light-sh); }
+  .member-day.today-badge { background:var(--accent); color:#fff; -webkit-box-shadow:0 2px 8px rgba(0,0,0,0.2); box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+
+  /* THEME PICKER */
+  .themes-strip { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-pack:center; -ms-flex-pack:center; justify-content:center; -ms-flex-wrap:wrap; flex-wrap:wrap; padding:16px 14px; }
+  .theme-opt { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-orient:vertical; -webkit-box-direction:normal; -ms-flex-direction:column; flex-direction:column; -webkit-box-align:center; -ms-flex-align:center; align-items:center; margin:0 5px; }
+  .theme-dot { width:36px; height:36px; border-radius:50%; cursor:pointer; border:none; outline:none; -webkit-transition:-webkit-transform 0.2s,box-shadow 0.2s; transition:transform 0.2s,box-shadow 0.2s; -webkit-box-shadow:3px 3px 8px rgba(0,0,0,0.18),-2px -2px 6px rgba(255,255,255,0.6); box-shadow:3px 3px 8px rgba(0,0,0,0.18),-2px -2px 6px rgba(255,255,255,0.6); margin-bottom:5px; }
+  .theme-dot:active { -webkit-transform:scale(0.9); transform:scale(0.9); }
+  .theme-dot.active { -webkit-box-shadow:inset 2px 2px 6px rgba(0,0,0,0.22),inset -2px -2px 5px rgba(255,255,255,0.5)!important; box-shadow:inset 2px 2px 6px rgba(0,0,0,0.22),inset -2px -2px 5px rgba(255,255,255,0.5)!important; }
+  .td-purple{background:#e8e0f0;}.td-blue{background:#dce8f5;}.td-sage{background:#ddeee6;}
+  .td-rose{background:#f5e0e8;}.td-dark{background:#2e2e42;}.td-warm{background:#f0e8d8;}
+  .theme-label { font-size:0.6rem; color:var(--sub); font-weight:700; letter-spacing:0.04em; text-align:center; text-transform:uppercase; }
+
+  .member-btn.is-today {
+    background: var(--today-bg) !important;
+    -webkit-box-shadow:6px 6px 14px var(--dark-sh),-6px -6px 14px var(--light-sh);
+    box-shadow:6px 6px 14px var(--dark-sh),-6px -6px 14px var(--light-sh);
+  }
+  .member-btn.is-today .member-name { color:#fff; }
+  .member-btn.is-today .member-day  { background:rgba(255,255,255,0.25); color:#fff; -webkit-box-shadow:none; box-shadow:none; }
+  .mt-clock  { margin-top:24px; }
+  .mt-card   { margin-top:18px; }
+  .mt-sect   { margin-top:26px; }
+  .mt-themes { margin-top:26px; }
+
+  .footer { margin-top:28px; text-align:center; font-size:0.68rem; color:var(--sub); opacity:0.7; }
+
+  /* ── LANDSCAPE PHONE + TABLET (≥ 600px) ─────────── */
+  @media screen and (min-width:600px) {
+    .page { max-width:1100px; padding:24px 28px 40px; }
+    .two-col { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-align:start; -ms-flex-align:start; align-items:flex-start; }
+    .col-left  { width:48%; -ms-flex-negative:0; flex-shrink:0; padding-right:24px; }
+    .col-right { -webkit-box-flex:1; -ms-flex:1; flex:1; }
+    .mt-clock  { margin-top:0; }
+  }
+
+  /* ── DESKTOP (≥ 1024px) ──────────────────────────── */
+  @media screen and (min-width:1024px) {
+    .page { padding:32px 48px 48px; }
+    .col-left  { width:44%; padding-right:36px; }
+    .time-display { font-size:4.6rem; }
+    .clock-card { padding:28px 28px 22px; }
+    .writer-card { padding:24px 24px 22px; }
+    .writer-avatar { width:62px; height:62px; font-size:1.75rem; }
+    .writer-name { font-size:1.6rem; }
+    .members-grid { -ms-grid-columns:1fr 14px 1fr 14px 1fr; grid-template-columns:1fr 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+<div class="two-col">
+
+  <!-- LEFT COLUMN -->
+  <div class="col-left">
+
+    <div class="clock-card neo mt-clock">
+      <div class="time-display">
+        <span id="hh">12</span>:<span id="mm">00</span><span class="ampm" id="ampm">AM</span>
+      </div>
+      <div class="date-row">
+        <span class="date-chip accent-chip" id="day-name">Monday</span>
+        <span class="date-chip" id="date-str">1 Jan 2025</span>
+      </div>
+    </div>
+
+    <div class="mt-card">
+      <span class="card-label">Today's writer ✍️</span>
+      <a class="writer-card neo-btn" id="today-card" href="#" target="_blank" rel="noopener">
+        <div class="writer-avatar" id="today-emoji"></div>
+        <div class="writer-info">
+          <div class="writer-tag">Reading &amp; Reflecting today</div>
+          <div class="writer-name" id="today-name">—</div>
+          <div class="writer-handle" id="today-handle">—</div>
+        </div>
+        <div class="writer-arrow">→</div>
+      </a>
+    </div>
+
+    <div class="mt-card">
+      <span class="card-label">Yesterday's writer 📖</span>
+      <a class="writer-card secondary neo-btn" id="yesterday-card" href="#" target="_blank" rel="noopener">
+        <div class="writer-avatar" id="yesterday-emoji"></div>
+        <div class="writer-info">
+          <div class="writer-tag">Yesterday's reflection</div>
+          <div class="writer-name" id="yesterday-name">—</div>
+          <div class="writer-handle" id="yesterday-handle">—</div>
+        </div>
+        <div class="writer-arrow">→</div>
+      </a>
+    </div>
+
+    <div class="mt-card">
+      <span class="card-label">Tomorrow's writer 🌅</span>
+      <a class="writer-card secondary neo-btn" id="tomorrow-card" href="#" target="_blank" rel="noopener">
+        <div class="writer-avatar" id="tomorrow-emoji"></div>
+        <div class="writer-info">
+          <div class="writer-tag">Up next</div>
+          <div class="writer-name" id="tomorrow-name">—</div>
+          <div class="writer-handle" id="tomorrow-handle">—</div>
+        </div>
+        <div class="writer-arrow">→</div>
+      </a>
+    </div>
+
+  </div><!-- /col-left -->
+
+  <!-- RIGHT COLUMN -->
+  <div class="col-right">
+
+    <div class="mt-sect">
+      <span class="section-title">The group 🕊️</span>
+      <div class="members-grid" id="members-grid"></div>
+    </div>
+
+    <div class="mt-themes">
+      <span class="section-title">Choose a colour</span>
+      <div class="neo" style="padding:4px 0 10px;">
+        <div class="themes-strip" id="theme-strip"></div>
+      </div>
+    </div>
+
+  </div><!-- /col-right -->
+
+</div><!-- /two-col -->
+<div class="footer">Made with ♥ for the Bible Study Group</div>
+</div><!-- /page -->
+
+<script>
+  var members = [
+    { name:'Melchi', day:1, url:'https://substack.com/@freshteaa',      emoji:'☕' },
+    { name:'Jerome', day:2, url:'https://substack.com/@jeromewycliffe', emoji:'📜' },
+    { name:'Ajith',  day:3, url:'https://substack.com/@ajitdhanjal',    emoji:'🐾' },
+    { name:'Sams',   day:4, url:'https://substack.com/@s8msi',          emoji:'🦋' },
+    { name:'Samir',  day:5, url:'https://substack.com/@samir08000',     emoji:'🌊' },
+    { name:'Jacob',  day:6, url:'https://substack.com/@jacobgsamuel',   emoji:'🏔️' },
+    { name:'Shaiju', day:null, url:'https://substack.com/@shaijugt',       emoji:'😇' },
+  ];
+  var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  function updateClock() {
+    var now = new Date();
+    var h24 = now.getHours();
+    var h12 = h24 % 12 || 12;
+    var min = now.getMinutes() < 10 ? '0'+now.getMinutes() : ''+now.getMinutes();
+    document.getElementById('hh').textContent = h12 < 10 ? '0'+h12 : ''+h12;
+    document.getElementById('mm').textContent = min;
+    document.getElementById('ampm').textContent = h24 < 12 ? 'AM' : 'PM';
+    document.getElementById('day-name').textContent = dayNames[now.getDay()];
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    document.getElementById('date-str').textContent = now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
+    return now.getDay();
+  }
+
+  function fillCard(prefix, m) {
+    var card = document.getElementById(prefix+'-card');
+    if (!m) { card.style.display='none'; document.querySelector('[data-label="'+prefix+'"]') && (document.querySelector('[data-label="'+prefix+'"]').style.display='none'); return; }
+    document.getElementById(prefix+'-emoji').textContent = m.emoji;
+    document.getElementById(prefix+'-name').textContent  = m.name;
+    document.getElementById(prefix+'-handle').textContent = '@' + m.url.split('@')[1];
+    card.href = m.url;
+  }
+
+  function renderMembers(today) {
+    var grid = document.getElementById('members-grid');
+    grid.innerHTML = '';
+    for (var i=0; i<members.length; i++) {
+      var m = members[i];
+      var isToday = m.day !== null && m.day === today;
+      var a = document.createElement('a');
+      a.className = 'member-btn neo-sm neo-btn' + (isToday ? ' is-today' : '');
+      a.href = m.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      var badge = isToday
+        ? '<span class="member-day today-badge">✨ Today</span>'
+        : (m.day !== null
+            ? '<span class="member-day">'+dayNames[m.day]+'</span>'
+            : '<span class="member-day" style="opacity:0.5;">Anytime</span>');
+      a.innerHTML = '<span class="member-emoji">'+m.emoji+'</span><span class="member-name">'+m.name+'</span>'+badge;
+      grid.appendChild(a);
+    }
+  }
+
+  var themes = [
+    {id:'purple',label:'Lavender',cls:'td-purple',attr:''},
+    {id:'blue',  label:'Sky',     cls:'td-blue',  attr:'blue'},
+    {id:'sage',  label:'Sage',    cls:'td-sage',  attr:'sage'},
+    {id:'rose',  label:'Rose',    cls:'td-rose',  attr:'rose'},
+    {id:'warm',  label:'Warm',    cls:'td-warm',  attr:'warm'},
+    {id:'dark',  label:'Dark',    cls:'td-dark',  attr:'dark'},
+  ];
+
+  function applyTheme(attr) {
+    if (attr) {
+      document.documentElement.setAttribute('data-theme', attr);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    var dots = document.querySelectorAll('.theme-dot');
+    for (var i=0; i<dots.length; i++) dots[i].classList.remove('active');
+    var active = document.querySelector('[data-tid="'+(attr||'purple')+'"]');
+    if (active) active.classList.add('active');
+    try { localStorage.setItem('bsg_theme', attr); } catch(e){}
+  }
+
+  function renderThemes() {
+    var strip = document.getElementById('theme-strip');
+    for (var i=0; i<themes.length; i++) {
+      var t = themes[i];
+      var wrap = document.createElement('div');
+      wrap.className = 'theme-opt';
+      var btn = document.createElement('button');
+      btn.className = 'theme-dot '+t.cls;
+      btn.setAttribute('data-tid', t.id);
+      btn.setAttribute('aria-label', t.label);
+      (function(attr){ btn.onclick = function(){ applyTheme(attr); }; })(t.attr);
+      var lbl = document.createElement('div');
+      lbl.className = 'theme-label';
+      lbl.textContent = t.label;
+      wrap.appendChild(btn);
+      wrap.appendChild(lbl);
+      strip.appendChild(wrap);
+    }
+  }
+
+  renderThemes();
+  var saved = '';
+  try { saved = localStorage.getItem('bsg_theme') || ''; } catch(e){}
+  applyTheme(saved);
+
+  var todayDay     = updateClock();
+  var yesterdayDay = (todayDay + 6) % 7;
+  var tomorrowDay  = (todayDay + 1) % 7;
+
+  function findMember(day) {
+    for (var i=0; i<members.length; i++) { if (members[i].day !== null && members[i].day===day) return members[i]; }
+    return null;
+  }
+
+  fillCard('today',     findMember(todayDay));
+  fillCard('yesterday', findMember(yesterdayDay));
+  fillCard('tomorrow',  findMember(tomorrowDay));
+  renderMembers(todayDay);
+
+  setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
